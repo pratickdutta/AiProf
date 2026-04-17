@@ -31,6 +31,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - **Metadata Config (`src/app/layout.tsx`):** Overhauled standard boilerplate DOM elements (Title, Meta Description) strictly for the AiProf persona.
 - **Upload Functionality:** Converted the mocked `handleUpload` state demonstration within the Dashboard to execute an actual robust POST request containing standard `FormData`.
+- **Chat Interface Overhaul (`src/app/dashboard/page.tsx`):**
+    - Redesigned the conversation layout to utilize a centered `max-w-4xl` reading area for optimal focus.
+    - Implemented strict right-alignment for user messages with dedicated avatar indicators and blue brand-gradient bubbles.
+    - Refined AI response styling with profile-style avatars and soft-dark themed bubbles.
+    - Added subtle sender labels and improved vertical spacing for a more comfortable conversational flow.
 
 ### Fixed
 - Identified and bypassed potential directory naming conflicts (`AiProf` uppercase constraints) cleanly against Node ecosystem restrictions during initial environment bootstrapping without disrupting the existing `.git` history structure.

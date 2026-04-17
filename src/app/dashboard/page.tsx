@@ -152,37 +152,53 @@ export default function Dashboard() {
         </header>
 
         {/* Chat Messages */}
-        <div className="flex-1 overflow-y-auto p-8 space-y-6 z-10 scrollbar-thin scrollbar-thumb-gray-800">
-          {messages.map((msg, idx) => (
-            <div key={idx} className={`flex max-w-[80%] ${msg.role === 'user' ? 'ml-auto' : ''}`}>
-              {msg.role === 'ai' && (
-                <div className="w-8 h-8 rounded-full bg-blue-600/20 border border-blue-500/30 flex items-center justify-center mr-3 mt-1 shrink-0">
-                  <Sparkles className="w-4 h-4 text-blue-400" />
+        <div className="flex-1 overflow-y-auto p-4 sm:p-8 space-y-8 z-10 scrollbar-thin scrollbar-thumb-gray-800">
+          <div className="max-w-4xl mx-auto space-y-8">
+            {messages.map((msg, idx) => (
+              <div key={idx} className={`flex w-full ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                <div className={`flex max-w-[85%] sm:max-w-[75%] ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'} items-start gap-3`}>
+                  
+                  {/* Avatar/Icon Section */}
+                  <div className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center border ${
+                    msg.role === 'ai' 
+                      ? 'bg-blue-600/20 border-blue-500/30 text-blue-400' 
+                      : 'bg-gray-700/50 border-gray-600/50 text-gray-400'
+                  }`}>
+                    {msg.role === 'ai' ? <Sparkles className="w-4 h-4" /> : <div className="text-[10px] font-bold">YOU</div>}
+                  </div>
+
+                  {/* Bubble Section */}
+                  <div className={`
+                    relative p-4 rounded-2xl shadow-lg border text-[15px] leading-relaxed
+                    ${msg.role === 'user' 
+                      ? 'bg-blue-600 border-blue-500 text-white rounded-tr-none select-none' 
+                      : 'bg-gray-800/60 border-gray-700/50 text-gray-200 rounded-tl-none'}
+                  `}>
+                    {msg.content}
+                    
+                    {/* Subtle timestamp or sender label (optional, adding for premium feel) */}
+                    <div className={`text-[10px] mt-2 opacity-50 font-medium ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
+                      {msg.role === 'user' ? 'You' : 'AiProf'}
+                    </div>
+                  </div>
                 </div>
-              )}
-              <div className={`p-4 rounded-2xl leading-relaxed text-[15px] shadow-sm ${
-                msg.role === 'user' 
-                  ? 'bg-blue-600 text-white rounded-tr-none' 
-                  : 'bg-gray-800/80 border border-gray-700/50 text-gray-200 rounded-tl-none'
-              }`}>
-                {msg.content}
               </div>
-            </div>
-          ))}
-          
-          {isTyping && (
-            <div className="flex max-w-[80%]">
-              <div className="w-8 h-8 rounded-full bg-blue-600/20 border border-blue-500/30 flex items-center justify-center mr-3 mt-1 shrink-0">
-                <Sparkles className="w-4 h-4 text-blue-400 animate-pulse" />
+            ))}
+            
+            {isTyping && (
+              <div className="flex justify-start items-start gap-3">
+                <div className="shrink-0 w-8 h-8 rounded-full bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400">
+                  <Sparkles className="w-4 h-4 animate-pulse" />
+                </div>
+                <div className="p-4 rounded-2xl bg-gray-800/80 border border-gray-700/50 text-gray-200 rounded-tl-none flex items-center gap-1 shadow-sm">
+                  <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                  <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                  <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce"></div>
+                </div>
               </div>
-              <div className="p-4 rounded-2xl bg-gray-800/80 border border-gray-700/50 text-gray-200 rounded-tl-none flex items-center gap-1 shadow-sm">
-                <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
-              </div>
-            </div>
-          )}
-          <div ref={messagesEndRef} />
+            )}
+            <div ref={messagesEndRef} />
+          </div>
         </div>
 
         {/* Input Box */}
