@@ -34,3 +34,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Identified and bypassed potential directory naming conflicts (`AiProf` uppercase constraints) cleanly against Node ecosystem restrictions during initial environment bootstrapping without disrupting the existing `.git` history structure.
+- **Chat UI Responsiveness:** Fixed an issue where the chat box felt unresponsive upon sending a message. Implemented a `useRef` based auto-bottom-scroll hook and a 3-dot bouncing "typing" indicator to instantly signal state changes upon user submit.

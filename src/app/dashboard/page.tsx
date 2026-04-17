@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { UploadCloud, FileText, Send, Sparkles, BookOpen, BrainCircuit } from "lucide-react";
 
@@ -15,6 +15,16 @@ export default function Dashboard() {
   const [messages, setMessages] = useState<{role: 'user' | 'ai', content: string}[]>([
     { role: "ai", content: "Hello! I'm AiProf. Upload a document or ask me a question about your current notes." }
   ]);
+  const [isTyping, setIsTyping] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, isTyping]);
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -61,6 +71,7 @@ export default function Dashboard() {
     // Add User Message
     setMessages(prev => [...prev, { role: "user", content: prompt }]);
     setPrompt("");
+    setIsTyping(true);
 
     // Simulate AI thinking and response
     setTimeout(() => {
@@ -68,6 +79,7 @@ export default function Dashboard() {
         role: "ai", 
         content: "This is a simulated response based on your notes. Once we connect the backend, I'll provide actual answers with citations!" 
       }]);
+      setIsTyping(false);
     }, 1000);
   };
 
@@ -157,6 +169,20 @@ export default function Dashboard() {
               </div>
             </div>
           ))}
+          
+          {isTyping && (
+            <div className="flex max-w-[80%]">
+              <div className="w-8 h-8 rounded-full bg-blue-600/20 border border-blue-500/30 flex items-center justify-center mr-3 mt-1 shrink-0">
+                <Sparkles className="w-4 h-4 text-blue-400 animate-pulse" />
+              </div>
+              <div className="p-4 rounded-2xl bg-gray-800/80 border border-gray-700/50 text-gray-200 rounded-tl-none flex items-center gap-1 shadow-sm">
+                <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
+              </div>
+            </div>
+          )}
+          <div ref={messagesEndRef} />
         </div>
 
         {/* Input Box */}
