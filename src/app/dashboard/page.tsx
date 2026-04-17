@@ -16,14 +16,41 @@ export default function Dashboard() {
     { role: "ai", content: "Hello! I'm AiProf. Upload a document or ask me a question about your current notes." }
   ]);
 
-  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
       setIsUploading(true);
-      // Simulate upload delay
-      setTimeout(() => {
-        setDocuments(prev => [...prev, { name: e.target.files![0].name, size: "1.1 MB" }]);
+      
+      const formData = new FormData();
+      formData.append("file", file);
+
+      try {
+        const response = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          // Add successfully processed document to the list
+          const sizeStr = (file.size / (1024 * 1024)).toFixed(2) + " MB";
+          setDocuments(prev => [...prev, { name: result.fileName, size: sizeStr }]);
+          
+          // Optionally add a system message to chat log
+          setMessages(prev => [...prev, { 
+            role: "ai", 
+            content: `Successfully analyzed ${result.fileName}! (${result.textLength} characters extracted). I am ready to answer questions about it.` 
+          }]);
+        } else {
+          alert("Error: " + result.error);
+        }
+      } catch (error) {
+        console.error("Upload error:", error);
+        alert("An error occurred while uploading.");
+      } finally {
         setIsUploading(false);
-      }, 1500);
+      }
     }
   };
 
